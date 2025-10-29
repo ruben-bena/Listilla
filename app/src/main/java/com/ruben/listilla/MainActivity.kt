@@ -14,6 +14,8 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import android.widget.LinearLayout
 import android.widget.EditText
+import android.graphics.BitmapFactory
+import android.widget.ImageView
 
 class MainActivity : AppCompatActivity() {
     // Model: ArrayList de Record (intents=puntuació, nom)
@@ -49,10 +51,8 @@ class MainActivity : AppCompatActivity() {
                     convertView = getLayoutInflater().inflate(R.layout.list_item, container, false)
                 }
                 // pintem imatge
-                /*
-                val bitmap = BitmapFactory.decodeStream( assets.open("ieti_logo.png") )
+                val bitmap = BitmapFactory.decodeStream( assets.open("ieti.png") )
                 convertView.findViewById<ImageView>(R.id.imageView).setImageBitmap( bitmap )
-                */
                 // "Pintem" valors (quan es refresca)
                 convertView.findViewById<TextView>(R.id.nom).text = getItem(pos)?.nom
                 convertView.findViewById<TextView>(R.id.intents).text = getItem(pos)?.intents.toString()
