@@ -5,14 +5,15 @@ import android.widget.ArrayAdapter
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
-import androidx.activity.R
 import androidx.core.view.WindowInsetsCompat
 import android.view.View
 import android.view.ViewGroup
-import android.graphics.BitmapFactory
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ListView
+import android.widget.Button
+import androidx.appcompat.app.AlertDialog
+import android.widget.LinearLayout
+import android.widget.EditText
 
 class MainActivity : AppCompatActivity() {
     // Model: ArrayList de Record (intents=puntuació, nom)
@@ -48,8 +49,10 @@ class MainActivity : AppCompatActivity() {
                     convertView = getLayoutInflater().inflate(R.layout.list_item, container, false)
                 }
                 // pintem imatge
+                /*
                 val bitmap = BitmapFactory.decodeStream( assets.open("ieti_logo.png") )
                 convertView.findViewById<ImageView>(R.id.imageView).setImageBitmap( bitmap )
+                */
                 // "Pintem" valors (quan es refresca)
                 convertView.findViewById<TextView>(R.id.nom).text = getItem(pos)?.nom
                 convertView.findViewById<TextView>(R.id.intents).text = getItem(pos)?.intents.toString()
@@ -61,5 +64,39 @@ class MainActivity : AppCompatActivity() {
         val lv = findViewById<ListView>(R.id.recordsView)
         lv.setAdapter(adapter)
 
+        // Botón "afegir record"
+        val button = findViewById<Button>(R.id.button)
+        button.setOnClickListener {
+            showAddRecordDialog()
+        }
+
+    }
+
+    fun showAddRecordDialog() {
+        val nom = EditText(this).apply { hint = "Nom" }
+        val intents = EditText(this).apply {
+            hint = "Intents"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+        }
+
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(nom)
+            addView(intents)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Nou record")
+            .setView(layout)
+            .setPositiveButton("Afegir") { _, _ ->
+                val nom = nom.text.toString()
+                val intents = intents.text.toString().toIntOrNull() ?: 0
+                if (nom.isNotEmpty()) {
+                    records.add(Record(intents, nom))
+                    adapter.notifyDataSetChanged()
+                }
+            }
+            .setNegativeButton("Cancel·lar", null)
+            .show()
     }
 }
