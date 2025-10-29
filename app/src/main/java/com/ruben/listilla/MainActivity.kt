@@ -70,27 +70,33 @@ class MainActivity : AppCompatActivity() {
             showAddRecordDialog()
         }
 
+        // Botón "ordenar per intents"
+        val sortButton = findViewById<Button>(R.id.buttonSort)
+        sortButton.setOnClickListener {
+            records.sortBy { it.intents }
+            adapter.notifyDataSetChanged()
+        }
     }
 
     fun showAddRecordDialog() {
-        val nom = EditText(this).apply { hint = "Nom" }
-        val intents = EditText(this).apply {
+        val name = EditText(this).apply { hint = "Nom" }
+        val tries = EditText(this).apply {
             hint = "Intents"
             inputType = android.text.InputType.TYPE_CLASS_NUMBER
         }
 
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            addView(nom)
-            addView(intents)
+            addView(name)
+            addView(tries)
         }
 
         AlertDialog.Builder(this)
             .setTitle("Nou record")
             .setView(layout)
             .setPositiveButton("Afegir") { _, _ ->
-                val nom = nom.text.toString()
-                val intents = intents.text.toString().toIntOrNull() ?: 0
+                val nom = name.text.toString()
+                val intents = tries.text.toString().toIntOrNull() ?: 0
                 if (nom.isNotEmpty()) {
                     records.add(Record(intents, nom))
                     adapter.notifyDataSetChanged()
